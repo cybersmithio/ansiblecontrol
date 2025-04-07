@@ -35,8 +35,19 @@ docker load -i ansiblecontrol.20250331.docker
 ```
 
 # Running
-Once the image is on the system, it can be run with this command:
+Running the container image requires it to be loaded onto the host system.  See the previous section on loading.
+
+While you can run the image without any Ansible files, that will mean that when the container is deleted so is your work.  
+So you will want to create a directory on the container host that has all the Ansible inventory, playbooks, and other files.
+In the examples below that directory is /home/jsmith/ansible
+
+This example is running the image on a Windows Docker system:
 ```
-docker run --rm -it --name ansiblecontrol cybersmithio/ansiblecontrol:20250331
+docker run --rm -it --name ansiblecontrol --mount type=bind,source=/c/Users/jsmith/ansible,target=/ansible cybersmithio/ansiblecontrol:20250331
+```
+
+To run the image using podman on a Linux system.  The ":z" at the end of the volume parameter allows the directory to be read on a system running SELinux:
+```
+podman run -rm -it --name ansiblecontrol --volume /home/jsmith/ansible:/ansible:z cybersmithio/ansiblecontrol:20250331
 ```
 
